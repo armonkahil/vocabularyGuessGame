@@ -7,6 +7,11 @@ const source = { uri: 'test-image' };
 
 beforeEach(() => {
   jest.useFakeTimers();
+  jest.spyOn(Animated, 'timing').mockReturnValue({
+    start: jest.fn(),
+    stop: jest.fn(),
+    reset: jest.fn(),
+  } as unknown as Animated.CompositeAnimation);
 });
 
 afterEach(() => {
@@ -15,14 +20,6 @@ afterEach(() => {
   jest.restoreAllMocks();
 });
 
-function mockTiming(finished: boolean) {
-  jest.spyOn(Animated, 'timing').mockReturnValue({
-    start: (cb?: (result: { finished: boolean }) => void) => { cb?.({ finished }); },
-    stop: jest.fn(),
-    reset: jest.fn(),
-  } as unknown as Animated.CompositeAnimation);
-}
-
 describe('AnimatedSplash', () => {
   it('renders without crashing', () => {
     expect(() =>
@@ -30,42 +27,44 @@ describe('AnimatedSplash', () => {
     ).not.toThrow();
   });
 
-  it('calls onDone after hold duration when animation finishes', () => {
-    mockTiming(true);
+  it('calls onDone after hold + fade duration', () => {
     const onDone = jest.fn();
     render(
       <AnimatedSplash source={source} onDone={onDone} holdDuration={1000} fadeDuration={500} />
     );
-    act(() => { jest.advanceTimersByTime(1000); });
+    act(() => { jest.advanceTimersByTime(1499); });
+    expect(onDone).not.toHaveBeenCalled();
+    act(() => { jest.advanceTimersByTime(1); });
     expect(onDone).toHaveBeenCalledTimes(1);
   });
 
-  it('does not call onDone when animation is interrupted (finished: false)', () => {
-    mockTiming(false);
-    const onDone = jest.fn();
-    render(
-      <AnimatedSplash source={source} onDone={onDone} holdDuration={1000} fadeDuration={500} />
-    );
-    act(() => { jest.advanceTimersByTime(1000); });
-    expect(onDone).not.toHaveBeenCalled();
-  });
-
-  it('does not call onDone before hold duration elapses', () => {
-    mockTiming(true);
+  it('does not call onDone before hold + fade duration elapses', () => {
     const onDone = jest.fn();
     render(
       <AnimatedSplash source={source} onDone={onDone} holdDuration={2500} fadeDuration={800} />
     );
-    act(() => { jest.advanceTimersByTime(2499); });
+    act(() => { jest.advanceTimersByTime(3299); });
     expect(onDone).not.toHaveBeenCalled();
   });
 
-  it('clears the timeout on unmount', () => {
+  it('starts the fade animation after hold duration', () => {
+    const timingSpy = Animated.timing as jest.Mock;
+    render(
+      <AnimatedSplash source={source} onDone={jest.fn()} holdDuration={1000} fadeDuration={500} />
+    );
+    act(() => { jest.advanceTimersByTime(1000); });
+    expect(timingSpy).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({ toValue: 0, duration: 500 }),
+    );
+  });
+
+  it('clears both timers on unmount', () => {
     const clearTimeoutSpy = jest.spyOn(global, 'clearTimeout');
     const { unmount } = render(
       <AnimatedSplash source={source} onDone={jest.fn()} />
     );
     unmount();
-    expect(clearTimeoutSpy).toHaveBeenCalled();
+    expect(clearTimeoutSpy).toHaveBeenCalledTimes(2);
   });
 });

@@ -21,17 +21,20 @@ export const AnimatedSplash: React.FC<Props> = ({
   const opacity = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
-    const hold = setTimeout(() => {
+    const fadeTimer = setTimeout(() => {
       Animated.timing(opacity, {
         toValue: 0,
         duration: fadeDuration,
         useNativeDriver: true,
-      }).start(({ finished }) => {
-        if (finished) onDone();
-      });
+      }).start();
     }, holdDuration);
 
-    return () => clearTimeout(hold);
+    const doneTimer = setTimeout(onDone, holdDuration + fadeDuration);
+
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(doneTimer);
+    };
   }, [fadeDuration, holdDuration, onDone, opacity]);
 
   return (
@@ -45,7 +48,7 @@ const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
     zIndex: 999,
-    backgroundColor: '#5B8DB8',
+    backgroundColor: '#1A3A5C',
     alignItems: 'center',
     justifyContent: 'center',
   },
