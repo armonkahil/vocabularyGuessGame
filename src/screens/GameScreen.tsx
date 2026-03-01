@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   StatusBar,
   Alert,
+  TouchableOpacity,
 } from 'react-native';
 
 import { stage1 } from '../data/stages';
@@ -14,26 +15,12 @@ import { SyllableButton } from '../components/SyllableButton';
 import { WordBuilder } from '../components/WordBuilder';
 import { HintList } from '../components/HintList';
 import { buildWordFromSyllables, validateWord, isStageComplete } from '../utils/gameLogic';
+import { useTheme } from '../theme/ThemeContext';
 import type { FeedbackState } from '../types';
 
-/**
- * GameScreen — main and only screen for the vocabulary guessing game.
- *
- * Layout (portrait):
- * ┌─────────────────────────────────┐
- * │           Header                │
- * ├─────────────────────────────────┤  ←── Section 2 (flex: 45)
- * │  [Word Builder]                 │
- * │  ─────────────────────────────  │
- * │  Hints — swipe to browse ──→    │  (horizontal FlatList of hint cards)
- * ├═════════════════════════════════╡  ←── thick divider
- * │  Syllable Pool                  │  ←── Section 1 (flex: 55)
- * │  [mis] [un] [der] [stand] …     │
- * │  [take] [hap] [py] [for] …      │
- * └─────────────────────────────────┘
- */
 export const GameScreen: React.FC = () => {
   const stage = stage1;
+  const { mode, colors, toggle } = useTheme();
 
   // ── Core state ──────────────────────────────────────────────────────────────
   const [selectedSyllables, setSelectedSyllables] = useState<string[]>([]);
@@ -77,7 +64,6 @@ export const GameScreen: React.FC = () => {
       }
     } else {
       setFeedback('incorrect');
-      // Keep the built word visible so the player can see what was wrong
     }
   }, [selectedSyllables, solvedWordIds, stage]);
 
@@ -85,16 +71,28 @@ export const GameScreen: React.FC = () => {
   const solvedCount = solvedWordIds.size;
   const totalCount = stage.targetWords.length;
 
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+
   return (
     <SafeAreaView style={styles.safe}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <StatusBar
+        barStyle={mode === 'dark' ? 'light-content' : 'dark-content'}
+        backgroundColor={colors.bg}
+      />
 
       {/* ── Header ──────────────────────────────────────────────────────────── */}
       <View style={styles.header}>
         <Text style={styles.stageTitle}>{stage.name}</Text>
-        <Text style={styles.progress}>
-          {solvedCount} / {totalCount} found
-        </Text>
+        <View style={styles.headerRight}>
+          <Text style={styles.progress}>
+            {solvedCount} / {totalCount} found
+          </Text>
+          <TouchableOpacity onPress={toggle} style={styles.themeBtn}>
+            <Text style={styles.themeBtnLabel}>
+              {mode === 'light' ? 'Dark' : 'Light'}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* ══════════════════════════════════════════════════════════════════════
@@ -107,6 +105,7 @@ export const GameScreen: React.FC = () => {
             <SyllableButton
               key={syllable}
               syllable={syllable}
+              colors={colors}
               onPress={handleSyllablePress}
             />
           ))}
@@ -122,6 +121,7 @@ export const GameScreen: React.FC = () => {
         <WordBuilder
           syllables={selectedSyllables}
           feedback={feedback}
+          colors={colors}
           onClear={handleClear}
           onSubmit={handleSubmit}
         />
@@ -130,7 +130,7 @@ export const GameScreen: React.FC = () => {
 
         {/* 2b — Hint list */}
         <Text style={styles.sectionLabel}>Hints</Text>
-        <HintList targetWords={stage.targetWords} solvedWordIds={solvedWordIds} />
+        <HintList targetWords={stage.targetWords} solvedWordIds={solvedWordIds} colors={colors} />
 
       </View>
 
@@ -138,77 +138,95 @@ export const GameScreen: React.FC = () => {
   );
 };
 
-// ── Styles ─────────────────────────────────────────────────────────────────────
-const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-  },
+// ── Styles (theme-aware) ───────────────────────────────────────────────────────
+import type { Colors } from '../theme/colors';
 
-  // ── Header ──────────────────────────────────────────
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E2E8F0',
-    backgroundColor: '#FFFFFF',
-  },
-  stageTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#2D3748',
-  },
-  progress: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#718096',
-  },
+const makeStyles = (c: Colors) =>
+  StyleSheet.create({
+    safe: {
+      flex: 1,
+      backgroundColor: c.bg,
+    },
 
-  // ── Section 1: Syllable Pool ─────────────────────────
-  // flex: 55 means this takes 55 parts out of 100 → 55% of space
-  sectionSyllables: {
-    flex: 55,
-    backgroundColor: '#F7FAFC',
-    borderBottomWidth: 3,
-    borderBottomColor: '#4A90E2',
-    paddingTop: 4,
-  },
+    // ── Header ──────────────────────────────────────────
+    header: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingHorizontal: 16,
+      paddingVertical: 10,
+      borderBottomWidth: 1,
+      borderBottomColor: c.border,
+      backgroundColor: c.bg,
+    },
+    stageTitle: {
+      fontSize: 18,
+      fontWeight: '700',
+      color: c.textPrimary,
+    },
+    headerRight: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 12,
+    },
+    progress: {
+      fontSize: 14,
+      fontWeight: '600',
+      color: c.textMuted,
+    },
+    themeBtn: {
+      paddingHorizontal: 10,
+      paddingVertical: 4,
+      borderRadius: 6,
+      borderWidth: 1,
+      borderColor: c.border,
+    },
+    themeBtnLabel: {
+      fontSize: 13,
+      fontWeight: '600',
+      color: c.textSecondary,
+    },
 
-  // ── Section 2: Display & Hints ───────────────────────
-  // flex: 45 means this takes 45 parts out of 45+55=100 → 45% of space
-  sectionDisplay: {
-    flex: 45,
-    paddingBottom: 4,
-    overflow: 'hidden',
-  },
+    // ── Section 1: Syllable Pool ─────────────────────────
+    sectionSyllables: {
+      flex: 55,
+      backgroundColor: c.surface,
+      borderBottomWidth: 3,
+      borderBottomColor: c.accent,
+      paddingTop: 4,
+    },
 
-  // ── Syllable grid (row-wrap inside ScrollView) ───────
-  syllableGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-  },
+    // ── Section 2: Display & Hints ───────────────────────
+    sectionDisplay: {
+      flex: 45,
+      paddingBottom: 4,
+      overflow: 'hidden',
+    },
 
-  // ── Shared ───────────────────────────────────────────
-  internalDivider: {
-    height: 1,
-    backgroundColor: '#E2E8F0',
-    marginHorizontal: 16,
-    marginVertical: 8,
-  },
-  sectionLabel: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: '#A0AEC0',
-    textTransform: 'uppercase',
-    letterSpacing: 1.2,
-    paddingHorizontal: 16,
-    paddingTop: 4,
-    paddingBottom: 2,
-  },
-});
+    // ── Syllable grid (row-wrap inside ScrollView) ───────
+    syllableGrid: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'center',
+      paddingHorizontal: 12,
+      paddingVertical: 10,
+    },
+
+    // ── Shared ───────────────────────────────────────────
+    internalDivider: {
+      height: 1,
+      backgroundColor: c.border,
+      marginHorizontal: 16,
+      marginVertical: 8,
+    },
+    sectionLabel: {
+      fontSize: 11,
+      fontWeight: '700',
+      color: c.textPlaceholder,
+      textTransform: 'uppercase',
+      letterSpacing: 1.2,
+      paddingHorizontal: 16,
+      paddingTop: 4,
+      paddingBottom: 2,
+    },
+  });

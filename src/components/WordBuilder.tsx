@@ -1,23 +1,28 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { lightColors } from '../theme/colors';
+import type { Colors } from '../theme/colors';
 import { FeedbackState } from '../types';
 
 interface Props {
   syllables: string[];
   feedback: FeedbackState;
+  colors?: Colors;
   onClear: () => void;
   onSubmit: () => void;
 }
 
-const BORDER_COLOR: Record<NonNullable<FeedbackState>, string> = {
-  correct: '#27AE60',
-  incorrect: '#E74C3C',
-};
-
-export const WordBuilder: React.FC<Props> = ({ syllables, feedback, onClear, onSubmit }) => {
+export const WordBuilder: React.FC<Props> = ({ syllables, feedback, colors = lightColors, onClear, onSubmit }) => {
   const builtWord = syllables.join('');
-  const borderColor = feedback ? BORDER_COLOR[feedback] : '#4A90E2';
   const canSubmit = syllables.length > 0;
+
+  const borderColor = feedback === 'correct'
+    ? colors.correct
+    : feedback === 'incorrect'
+      ? colors.incorrect
+      : colors.accent;
+
+  const styles = useMemo(() => makeStyles(colors), [colors]);
 
   return (
     <View style={styles.container}>
@@ -61,83 +66,84 @@ export const WordBuilder: React.FC<Props> = ({ syllables, feedback, onClear, onS
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 16,
-    paddingTop: 12,
-  },
-  wordDisplay: {
-    minHeight: 56,
-    borderWidth: 2,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F0F4F8',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-  },
-  placeholder: {
-    color: '#A0AEC0',
-    fontSize: 15,
-    fontStyle: 'italic',
-  },
-  syllableRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    gap: 4,
-  },
-  chip: {
-    backgroundColor: '#4A90E2',
-    borderRadius: 6,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-  },
-  chipText: {
-    color: '#FFF',
-    fontWeight: '700',
-    fontSize: 15,
-  },
-  wordPreview: {
-    textAlign: 'center',
-    marginTop: 6,
-    fontSize: 20,
-    fontWeight: '800',
-    color: '#2D3748',
-    letterSpacing: 1.5,
-  },
-  correctPreview: {
-    color: '#27AE60',
-  },
-  actions: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    marginTop: 10,
-    gap: 10,
-  },
-  clearBtn: {
-    paddingHorizontal: 22,
-    paddingVertical: 9,
-    borderRadius: 8,
-    backgroundColor: '#E2E8F0',
-  },
-  clearLabel: {
-    color: '#4A5568',
-    fontWeight: '600',
-    fontSize: 15,
-  },
-  submitBtn: {
-    paddingHorizontal: 22,
-    paddingVertical: 9,
-    borderRadius: 8,
-    backgroundColor: '#4A90E2',
-  },
-  submitDisabled: {
-    backgroundColor: '#A0AEC0',
-  },
-  submitLabel: {
-    color: '#FFF',
-    fontWeight: '700',
-    fontSize: 15,
-  },
-});
+const makeStyles = (c: Colors) =>
+  StyleSheet.create({
+    container: {
+      paddingHorizontal: 16,
+      paddingTop: 12,
+    },
+    wordDisplay: {
+      minHeight: 56,
+      borderWidth: 2,
+      borderRadius: 12,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: c.surfaceAlt,
+      paddingHorizontal: 12,
+      paddingVertical: 8,
+    },
+    placeholder: {
+      color: c.textPlaceholder,
+      fontSize: 15,
+      fontStyle: 'italic',
+    },
+    syllableRow: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'center',
+      gap: 4,
+    },
+    chip: {
+      backgroundColor: c.accent,
+      borderRadius: 6,
+      paddingHorizontal: 10,
+      paddingVertical: 4,
+    },
+    chipText: {
+      color: c.onAccent,
+      fontWeight: '700',
+      fontSize: 15,
+    },
+    wordPreview: {
+      textAlign: 'center',
+      marginTop: 6,
+      fontSize: 20,
+      fontWeight: '800',
+      color: c.textPrimary,
+      letterSpacing: 1.5,
+    },
+    correctPreview: {
+      color: c.correct,
+    },
+    actions: {
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      marginTop: 10,
+      gap: 10,
+    },
+    clearBtn: {
+      paddingHorizontal: 22,
+      paddingVertical: 9,
+      borderRadius: 8,
+      backgroundColor: c.clearBg,
+    },
+    clearLabel: {
+      color: c.textSecondary,
+      fontWeight: '600',
+      fontSize: 15,
+    },
+    submitBtn: {
+      paddingHorizontal: 22,
+      paddingVertical: 9,
+      borderRadius: 8,
+      backgroundColor: c.accent,
+    },
+    submitDisabled: {
+      backgroundColor: c.textPlaceholder,
+    },
+    submitLabel: {
+      color: c.onAccent,
+      fontWeight: '700',
+      fontSize: 15,
+    },
+  });
