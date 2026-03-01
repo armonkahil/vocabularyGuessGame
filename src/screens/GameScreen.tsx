@@ -63,7 +63,7 @@ export const GameScreen: React.FC = () => {
       setSelectedSyllables([]);
 
       if (isStageComplete(stage, nextSolved)) {
-        setTimeout(
+        void setTimeout(
           () => Alert.alert('Stage Complete! 🎉', 'You found all the words!'),
           800,
         );

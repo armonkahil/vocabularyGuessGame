@@ -16,11 +16,9 @@ export const WordBuilder: React.FC<Props> = ({ syllables, feedback, colors = lig
   const builtWord = syllables.join('');
   const canSubmit = syllables.length > 0;
 
-  const borderColor = feedback === 'correct'
-    ? colors.correct
-    : feedback === 'incorrect'
-      ? colors.incorrect
-      : colors.accent;
+  let borderColor = colors.accent;
+  if (feedback === 'correct') borderColor = colors.correct;
+  else if (feedback === 'incorrect') borderColor = colors.incorrect;
 
   const styles = useMemo(() => makeStyles(colors), [colors]);
 
@@ -33,7 +31,7 @@ export const WordBuilder: React.FC<Props> = ({ syllables, feedback, colors = lig
         ) : (
           <View style={styles.syllableRow}>
             {syllables.map((s, i) => (
-              <View key={i} style={styles.chip}>
+              <View key={`${s}-${i}`} style={styles.chip}>
                 <Text style={styles.chipText}>{s}</Text>
               </View>
             ))}

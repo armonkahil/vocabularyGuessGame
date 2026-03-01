@@ -1,9 +1,6 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "lib": [
-      "ESNext"
-    ],
     "jsx": "react-native",
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
@@ -13,6 +10,7 @@
     "noEmit": true,
     "skipLibCheck": true,
     "strict": true,
+    "forceConsistentCasingInFileNames": true,
     "paths": {
       "@/*": [
         "./src/*"
