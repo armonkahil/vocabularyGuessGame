@@ -136,7 +136,7 @@ export const stage7: Stage = {
     { id: 's7_w4', word: 'discover',    syllables: ['dis', 'cov', 'er'],         definition: 'To find something unexpectedly; to be the first to find, learn of, or observe.' },
     { id: 's7_w5', word: 'venture',     syllables: ['ven', 'ture'],              definition: 'A risky or daring journey or undertaking; to dare to do something.' },
     { id: 's7_w6', word: 'return',      syllables: ['re', 'turn'],               definition: 'To come or go back to a place or person; the act of arriving back.' },
-    { id: 's7_w7', word: 'explorer',    syllables: ['ex', 'plore', 'er'],        definition: 'A person who travels to unknown regions in order to discover new things.' },
+    { id: 's7_w7', word: 'recover',     syllables: ['re', 'cov', 'er'],          definition: 'To return to a normal state after difficulty; to find or regain something lost.' },
     { id: 's7_w8', word: 'rediscover',  syllables: ['re', 'dis', 'cov', 'er'],   definition: 'To discover again; to find renewed pleasure or interest in something previously known.' },
   ],
 };
@@ -268,9 +268,9 @@ export const stage13: Stage = {
 export const stage14: Stage = {
   id: 'stage_14',
   name: 'Stage 14: Music & Sound',
-  syllablePool: ['song', 'write', 'er', 'beat', 'drum', 'sound', 'track', 'back', 'play', 'list', 'down'],
+  syllablePool: ['song', 'writ', 'er', 'beat', 'drum', 'sound', 'track', 'back', 'play', 'list', 'down'],
   targetWords: [
-    { id: 's14_w1', word: 'songwriter', syllables: ['song', 'write', 'er'], definition: 'A person who writes the words and often the music of popular songs.' },
+    { id: 's14_w1', word: 'songwriter', syllables: ['song', 'writ', 'er'], definition: 'A person who writes the words and often the music of popular songs.' },
     { id: 's14_w2', word: 'drumbeat',   syllables: ['drum', 'beat'],        definition: 'A stroke or pattern of strokes on a drum; a regular rhythmic pattern.' },
     { id: 's14_w3', word: 'soundtrack', syllables: ['sound', 'track'],      definition: 'The recorded sound for a movie; a recording of music from a film or show.' },
     { id: 's14_w4', word: 'playback',   syllables: ['play', 'back'],        definition: 'The action of reproducing previously recorded sound or pictures.' },
@@ -296,7 +296,7 @@ export const stage15: Stage = {
     { id: 's15_w4', word: 'winner',     syllables: ['win', 'ner'],     definition: 'A person or thing that wins a contest or competition.' },
     { id: 's15_w5', word: 'ballgame',   syllables: ['ball', 'game'],   definition: 'A game played with a ball; a situation of a particular type.' },
     { id: 's15_w6', word: 'gameplay',   syllables: ['game', 'play'],   definition: 'The way in which a game is played; the features of a game from a player\'s perspective.' },
-    { id: 's15_w7', word: 'scorer',     syllables: ['score', 'er'],    definition: 'A person who scores in a game; a person who keeps the score.' },
+    { id: 's15_w7', word: 'matchplay',  syllables: ['match', 'play'],  definition: 'A form of golf in which each hole is won or lost individually; competitive match format.' },
     { id: 's15_w8', word: 'groundwork', syllables: ['ground', 'work'], definition: 'Preliminary or basic work done as a foundation for something; preparation.' },
   ],
 };
@@ -594,7 +594,7 @@ export const stage30: Stage = {
     { id: 's30_w2', word: 'bakehouse',  syllables: ['bake', 'house'],   definition: 'A building used for baking; a bakery.' },
     { id: 's30_w3', word: 'roasting',   syllables: ['roast', 'ing'],    definition: 'Cooking food by dry heat in an oven; the act of criticizing or teasing someone.' },
     { id: 's30_w4', word: 'cooking',    syllables: ['cook', 'ing'],     definition: 'The practice or skill of preparing food; the food produced by this activity.' },
-    { id: 's30_w5', word: 'baker',      syllables: ['bake', 'er'],      definition: 'A person who bakes and sells bread, cakes, and pastries.' },
+    { id: 's30_w5', word: 'roaster',    syllables: ['roast', 'er'],     definition: 'A container or oven for roasting food; a chicken or other bird suitable for roasting.' },
     { id: 's30_w6', word: 'chopstick',  syllables: ['chop', 'stick'],   definition: 'Each of a pair of thin tapered sticks used to pick up food, especially in East Asia.' },
     { id: 's30_w7', word: 'blender',    syllables: ['blend', 'er'],     definition: 'An electric appliance for liquefying, chopping, or mixing food.' },
     { id: 's30_w8', word: 'cookhouse',  syllables: ['cook', 'house'],   definition: 'A kitchen, especially in a military camp or ranch; a large field kitchen.' },
@@ -668,16 +668,16 @@ export const stage33: Stage = {
 export const stage34: Stage = {
   id: 'stage_34',
   name: 'Stage 34: The "-ing" Progressive',
-  syllablePool: ['break', 'make', 'take', 'give', 'change', 'learn', 'grow', 'drive', 'live', 'write', 'ing'],
+  syllablePool: ['break', 'mak', 'tak', 'giv', 'chang', 'learn', 'grow', 'driv', 'live', 'writ', 'ing'],
   targetWords: [
-    { id: 's34_w1', word: 'breaking', syllables: ['break', 'ing'],   definition: 'Separating into pieces; failing to keep a rule or promise; most recent news.' },
-    { id: 's34_w2', word: 'making',   syllables: ['make', 'ing'],    definition: 'The process of creating or producing something; the essential qualities of a person.' },
-    { id: 's34_w3', word: 'taking',   syllables: ['take', 'ing'],    definition: 'The act of getting or removing something; an amount of money received.' },
-    { id: 's34_w4', word: 'giving',   syllables: ['give', 'ing'],    definition: 'The act of transferring something to someone; providing something voluntarily.' },
-    { id: 's34_w5', word: 'changing', syllables: ['change', 'ing'],  definition: 'Making or becoming different; moving from one to another.' },
-    { id: 's34_w6', word: 'learning', syllables: ['learn', 'ing'],   definition: 'The acquisition of knowledge or skills through experience, study, or teaching.' },
-    { id: 's34_w7', word: 'growing',  syllables: ['grow', 'ing'],    definition: 'Increasing in size, amount, or degree; developing.' },
-    { id: 's34_w8', word: 'driving',  syllables: ['drive', 'ing'],   definition: 'Operating a motor vehicle; urging or motivating forcefully.' },
+    { id: 's34_w1', word: 'breaking', syllables: ['break', 'ing'],  definition: 'Separating into pieces; failing to keep a rule or promise; most recent news.' },
+    { id: 's34_w2', word: 'making',   syllables: ['mak', 'ing'],    definition: 'The process of creating or producing something; the essential qualities of a person.' },
+    { id: 's34_w3', word: 'taking',   syllables: ['tak', 'ing'],    definition: 'The act of getting or removing something; an amount of money received.' },
+    { id: 's34_w4', word: 'giving',   syllables: ['giv', 'ing'],    definition: 'The act of transferring something to someone; providing something voluntarily.' },
+    { id: 's34_w5', word: 'changing', syllables: ['chang', 'ing'],  definition: 'Making or becoming different; moving from one to another.' },
+    { id: 's34_w6', word: 'learning', syllables: ['learn', 'ing'],  definition: 'The acquisition of knowledge or skills through experience, study, or teaching.' },
+    { id: 's34_w7', word: 'growing',  syllables: ['grow', 'ing'],   definition: 'Increasing in size, amount, or degree; developing.' },
+    { id: 's34_w8', word: 'driving',  syllables: ['driv', 'ing'],   definition: 'Operating a motor vehicle; urging or motivating forcefully.' },
   ],
 };
 
@@ -808,9 +808,9 @@ export const stage40: Stage = {
 export const stage41: Stage = {
   id: 'stage_41',
   name: 'Stage 41: Law & Justice',
-  syllablePool: ['law', 'make', 'court', 'house', 'break', 'er', 'free', 'dom', 'lord', 'ful', 'out', 'land', 'ship'],
+  syllablePool: ['law', 'mak', 'court', 'house', 'break', 'er', 'free', 'dom', 'lord', 'ful', 'out', 'land', 'ship'],
   targetWords: [
-    { id: 's41_w1', word: 'lawmaker',   syllables: ['law', 'make', 'er'],  definition: 'A person who makes laws; a legislator.' },
+    { id: 's41_w1', word: 'lawmaker',   syllables: ['law', 'mak', 'er'],   definition: 'A person who makes laws; a legislator.' },
     { id: 's41_w2', word: 'courthouse', syllables: ['court', 'house'],     definition: 'A building in which a judicial court is held.' },
     { id: 's41_w3', word: 'lawbreaker', syllables: ['law', 'break', 'er'], definition: 'A person who breaks the law; a criminal.' },
     { id: 's41_w4', word: 'freedom',    syllables: ['free', 'dom'],        definition: 'The power or right to act, speak, or think as one wants; absence of constraint.' },
@@ -868,13 +868,13 @@ export const stage43: Stage = {
 export const stage44: Stage = {
   id: 'stage_44',
   name: 'Stage 44: The "-able" Suffix',
-  syllablePool: ['read', 'a', 'ble', 'teach', 'break', 'wash', 'use', 'do', 're', 'mark', 'work', 'note'],
+  syllablePool: ['read', 'a', 'ble', 'teach', 'break', 'wash', 'us', 'do', 're', 'mark', 'work', 'note'],
   targetWords: [
     { id: 's44_w1', word: 'readable',   syllables: ['read', 'a', 'ble'],        definition: 'Easy or enjoyable to read; legible.' },
     { id: 's44_w2', word: 'teachable',  syllables: ['teach', 'a', 'ble'],       definition: 'Able to be taught; willing and able to learn; a teachable moment.' },
     { id: 's44_w3', word: 'breakable',  syllables: ['break', 'a', 'ble'],       definition: 'Capable of breaking or being broken; fragile.' },
     { id: 's44_w4', word: 'washable',   syllables: ['wash', 'a', 'ble'],        definition: 'Able to be washed without shrinking or other damage.' },
-    { id: 's44_w5', word: 'usable',     syllables: ['use', 'a', 'ble'],         definition: 'Able to be used; practical and convenient.' },
+    { id: 's44_w5', word: 'usable',     syllables: ['us', 'a', 'ble'],          definition: 'Able to be used; practical and convenient.' },
     { id: 's44_w6', word: 'doable',     syllables: ['do', 'a', 'ble'],          definition: 'Within one\'s powers; able to be done or performed; feasible.' },
     { id: 's44_w7', word: 'remarkable', syllables: ['re', 'mark', 'a', 'ble'],  definition: 'Worthy of attention; striking or extraordinary; notably unusual.' },
     { id: 's44_w8', word: 'workable',   syllables: ['work', 'a', 'ble'],        definition: 'Able to be carried out; practicable; capable of being worked.' },
