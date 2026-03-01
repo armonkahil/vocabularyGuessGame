@@ -19,6 +19,7 @@ interface RowProps {
 
 const HintRow: React.FC<RowProps> = ({ item, index, isSolved, colors }) => {
   const styles = useMemo(() => makeStyles(colors), [colors]);
+  const letterCount = `${item.word.length} letters`;
 
   return (
     <View style={[styles.row, isSolved && styles.solvedRow]}>
@@ -26,14 +27,10 @@ const HintRow: React.FC<RowProps> = ({ item, index, isSolved, colors }) => {
       {isSolved ? (
         <Text style={styles.solvedWord}>{item.word}</Text>
       ) : (
-        <Text style={styles.blanks}>
-          {item.syllables.map(() => '___').join(' · ')}
-        </Text>
-      )}
-      {!isSolved && (
-        <Text style={styles.syllableCount}>
-          {item.syllables.length}syl
-        </Text>
+        <>
+          <Text style={styles.definition} numberOfLines={2}>{item.definition}</Text>
+          <Text style={styles.letterCount}>{letterCount}</Text>
+        </>
       )}
     </View>
   );
@@ -73,7 +70,7 @@ const makeStyles = (c: Colors) =>
     row: {
       flexDirection: 'row',
       alignItems: 'center',
-      paddingVertical: 6,
+      paddingVertical: 7,
       borderBottomWidth: 1,
       borderBottomColor: c.border,
       gap: 8,
@@ -87,22 +84,23 @@ const makeStyles = (c: Colors) =>
       fontWeight: '700',
       fontSize: 13,
     },
-    blanks: {
+    definition: {
       flex: 1,
-      color: c.accent,
-      fontSize: 13,
-      fontWeight: '700',
-      letterSpacing: 1.5,
+      color: c.textPrimary,
+      fontSize: 12,
+      lineHeight: 16,
+    },
+    letterCount: {
+      color: c.textPlaceholder,
+      fontSize: 11,
+      fontWeight: '600',
+      minWidth: 52,
+      textAlign: 'right',
     },
     solvedWord: {
       flex: 1,
       color: c.correctText,
       fontSize: 14,
       fontWeight: '800',
-    },
-    syllableCount: {
-      color: c.textPlaceholder,
-      fontSize: 11,
-      fontWeight: '600',
     },
   });

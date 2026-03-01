@@ -16,22 +16,22 @@ describe('HintList', () => {
     ).not.toThrow();
   });
 
-  it('shows blanks for unsolved words', () => {
-    const { getAllByText } = render(
+  it('shows definition text for unsolved words', () => {
+    const { getByText } = render(
       <HintList targetWords={targetWords} solvedWordIds={new Set()} />,
     );
-    // Each 2-syllable word produces "___ · ___"; we have three 2-syllable words
-    const blanks = getAllByText('___ · ___');
-    expect(blanks.length).toBe(3);
+    expect(getByText('Light from the sun.')).toBeTruthy();
+    expect(getByText('A cloud that brings rain.')).toBeTruthy();
+    expect(getByText('A room used to develop film.')).toBeTruthy();
   });
 
-  it('shows condensed syllable count for unsolved words', () => {
+  it('shows letter count for unsolved words', () => {
     const { getAllByText } = render(
       <HintList targetWords={targetWords} solvedWordIds={new Set()} />,
     );
-    // All three words have 2 syllables → "2syl" each
-    const counts = getAllByText('2syl');
-    expect(counts.length).toBe(3);
+    // sunlight=8, darkroom=8 → two "8 letters"; raincloud=9 → one "9 letters"
+    expect(getAllByText('8 letters').length).toBe(2);
+    expect(getAllByText('9 letters').length).toBe(1);
   });
 
   it('shows the word text for solved words', () => {
@@ -41,22 +41,20 @@ describe('HintList', () => {
     expect(getByText('sunlight')).toBeTruthy();
   });
 
-  it('hides blanks for solved words', () => {
-    const { getAllByText } = render(
+  it('hides definition for solved words', () => {
+    const { queryByText } = render(
       <HintList targetWords={targetWords} solvedWordIds={new Set(['tw-1'])} />,
     );
-    // Only 2 unsolved words remain → 2 blank entries
-    const blanks = getAllByText('___ · ___');
-    expect(blanks.length).toBe(2);
+    // Solved word's definition should not be shown
+    expect(queryByText('Light from the sun.')).toBeNull();
   });
 
-  it('does not show syllable count for solved words', () => {
+  it('hides letter count for solved words', () => {
     const { getAllByText } = render(
       <HintList targetWords={targetWords} solvedWordIds={new Set(['tw-1'])} />,
     );
-    // Only 2 unsolved cards should show syllable count
-    const counts = getAllByText('2syl');
-    expect(counts.length).toBe(2);
+    // Only darkroom (8 letters) remains unsolved with 8-letter count; sunlight is solved
+    expect(getAllByText('8 letters').length).toBe(1);
   });
 
   it('shows correct numbered indices starting at 1', () => {
@@ -74,13 +72,13 @@ describe('HintList', () => {
     ).not.toThrow();
   });
 
-  it('shows singular "1syl" when a word has only one syllable', () => {
-    const singleSyllableWords: TargetWord[] = [
+  it('shows letter count for a short word', () => {
+    const shortWords: TargetWord[] = [
       { id: 'tw-s1', word: 'sun', syllables: ['sun'], definition: 'The star at the center of our solar system.' },
     ];
     const { getByText } = render(
-      <HintList targetWords={singleSyllableWords} solvedWordIds={new Set()} />,
+      <HintList targetWords={shortWords} solvedWordIds={new Set()} />,
     );
-    expect(getByText('1syl')).toBeTruthy();
+    expect(getByText('3 letters')).toBeTruthy();
   });
 });

@@ -16,11 +16,16 @@ import { WordBuilder } from '../components/WordBuilder';
 import { HintList } from '../components/HintList';
 import { buildWordFromSyllables, validateWord, isStageComplete } from '../utils/gameLogic';
 import { useTheme } from '../theme/ThemeContext';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { FeedbackState } from '../types';
 
 export const GameScreen: React.FC = () => {
   const stage = stage1;
   const { mode, colors, toggle } = useTheme();
+  const { bottom: bottomInset } = useSafeAreaInsets();
+  // Mirror the bottom safe-area height so the banner balances it visually.
+  // Fall back to 34 on devices that report 0 (e.g. older iPhones / Android).
+  const bannerHeight = bottomInset > 0 ? bottomInset : 34;
 
   // ── Core state ──────────────────────────────────────────────────────────────
   const [selectedSyllables, setSelectedSyllables] = useState<string[]>([]);
@@ -79,6 +84,15 @@ export const GameScreen: React.FC = () => {
         barStyle={mode === 'dark' ? 'light-content' : 'dark-content'}
         backgroundColor={colors.bg}
       />
+
+      {/* ── Banner ──────────────────────────────────────────────────────────── */}
+      <View style={[styles.banner, { height: bannerHeight }]}>
+        <Text style={styles.bannerSyl}>SYL</Text>
+        <Text style={styles.bannerDot}> · </Text>
+        <Text style={styles.bannerLa}>LA</Text>
+        <Text style={styles.bannerDot}> · </Text>
+        <Text style={styles.bannerBuild}>BUILD</Text>
+      </View>
 
       {/* ── Header ──────────────────────────────────────────────────────────── */}
       <View style={styles.header}>
@@ -148,6 +162,40 @@ const makeStyles = (c: Colors) =>
       backgroundColor: c.bg,
     },
 
+    // ── Banner ──────────────────────────────────────────
+    banner: {
+      backgroundColor: c.accent,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    bannerSyl: {
+      color: c.onAccent,
+      fontWeight: '900',
+      fontSize: 13,
+      letterSpacing: 3,
+      opacity: 0.75,
+    },
+    bannerDot: {
+      color: c.onAccent,
+      fontWeight: '900',
+      fontSize: 13,
+      opacity: 0.45,
+    },
+    bannerLa: {
+      color: c.onAccent,
+      fontWeight: '900',
+      fontSize: 13,
+      letterSpacing: 3,
+      opacity: 0.75,
+    },
+    bannerBuild: {
+      color: c.onAccent,
+      fontWeight: '900',
+      fontSize: 15,
+      letterSpacing: 4,
+    },
+
     // ── Header ──────────────────────────────────────────
     header: {
       flexDirection: 'row',
@@ -188,8 +236,9 @@ const makeStyles = (c: Colors) =>
     },
 
     // ── Section 1: Syllable Pool ─────────────────────────
+    // Sizes to content; scrollable if syllables overflow maxHeight
     sectionSyllables: {
-      flex: 55,
+      maxHeight: 220,
       backgroundColor: c.surface,
       borderBottomWidth: 3,
       borderBottomColor: c.accent,
@@ -197,8 +246,9 @@ const makeStyles = (c: Colors) =>
     },
 
     // ── Section 2: Display & Hints ───────────────────────
+    // Fills all remaining space directly beneath the syllable pool
     sectionDisplay: {
-      flex: 45,
+      flex: 1,
       paddingBottom: 4,
       overflow: 'hidden',
     },

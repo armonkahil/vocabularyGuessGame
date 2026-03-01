@@ -3,6 +3,12 @@ language: node_js
 node_js:
   - '20'
 
+addons:
+  sonarcloud:
+    organization: 'armonkahil'
+    token:
+      secure: 'REPLACE_WITH_ENCRYPTED_SONAR_TOKEN'
+
 cache:
   npm: true
 
@@ -10,4 +16,5 @@ install:
   - npm ci
 
 script:
-  - npm test
+  - npm run test:coverage
+  - sonar-scanner
