@@ -6,13 +6,12 @@ node_js:
 addons:
   sonarcloud:
     organization: 'armonkahil'
-    token:
-      secure: 'REPLACE_WITH_ENCRYPTED_SONAR_TOKEN'
 
 cache:
   npm: true
 
 before_script:
+  - sudo mkdir -p /usr/share/man/man1
   - sudo apt-get install -y openjdk-17-jdk
   - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
   - export PATH=$JAVA_HOME/bin:$PATH
