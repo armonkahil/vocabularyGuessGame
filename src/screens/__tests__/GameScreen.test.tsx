@@ -3,6 +3,7 @@ import { render, fireEvent, act } from '@testing-library/react-native';
 import { Alert } from 'react-native';
 import { GameScreen } from '../GameScreen';
 import { stage1 } from '../../data/stages';
+import { ThemeProvider } from '../../theme/ThemeContext';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -181,5 +182,18 @@ describe('GameScreen — stage completion', () => {
       'Stage Complete! 🎉',
       'You found all the words!',
     );
+  });
+});
+
+// ─── Dark mode ────────────────────────────────────────────────────────────────
+
+describe('GameScreen — dark mode toggle', () => {
+  it('shows "Light" label after toggling to dark mode', async () => {
+    const { getByText } = render(
+      <ThemeProvider><GameScreen /></ThemeProvider>
+    );
+    await act(async () => {});
+    fireEvent.press(getByText('Dark'));
+    expect(getByText('Light')).toBeTruthy();
   });
 });
