@@ -10,7 +10,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "test": "jest --ci"
+    "test": "jest --ci",
+    "test:coverage": "jest --ci --coverage"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.23.1",
@@ -37,7 +38,15 @@
     },
     "transformIgnorePatterns": [
       "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*)"
-    ]
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx}",
+      "!src/**/__tests__/**",
+      "!src/**/__mocks__/**",
+      "!src/data/stages.ts"
+    ],
+    "coverageReporters": ["lcov", "text-summary"],
+    "coverageDirectory": "coverage"
   },
   "overrides": {
     "serialize-javascript": "^7.0.3",
