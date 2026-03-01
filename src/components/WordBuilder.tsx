@@ -126,7 +126,7 @@ const makeStyles = (c: Colors) =>
       backgroundColor: c.clearBg,
     },
     clearLabel: {
-      color: c.textSecondary,
+      color: c.onAccent,
       fontWeight: '600',
       fontSize: 15,
     },
