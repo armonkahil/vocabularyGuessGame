@@ -64,9 +64,9 @@ describe('GameScreen — initial render', () => {
     expect(getByText('Syllable Pool')).toBeTruthy();
   });
 
-  it('renders the "Hints — swipe to browse" label', () => {
+  it('renders the "Hints" label', () => {
     const { getByText } = render(<GameScreen />);
-    expect(getByText('Hints — swipe to browse')).toBeTruthy();
+    expect(getByText('Hints')).toBeTruthy();
   });
 });
 

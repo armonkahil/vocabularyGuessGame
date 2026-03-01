@@ -98,7 +98,23 @@ export const GameScreen: React.FC = () => {
       </View>
 
       {/* ══════════════════════════════════════════════════════════════════════
-          SECTION 2 — Display & Hints  (top 45% of remaining space)
+          SECTION 1 — Syllable Pool  (top 55% of remaining space)
+      ══════════════════════════════════════════════════════════════════════ */}
+      <View style={styles.sectionSyllables}>
+        <Text style={styles.sectionLabel}>Syllable Pool</Text>
+        <ScrollView contentContainerStyle={styles.syllableGrid}>
+          {stage.syllablePool.map((syllable) => (
+            <SyllableButton
+              key={syllable}
+              syllable={syllable}
+              onPress={handleSyllablePress}
+            />
+          ))}
+        </ScrollView>
+      </View>
+
+      {/* ══════════════════════════════════════════════════════════════════════
+          SECTION 2 — Display & Hints  (bottom 45% of remaining space)
       ══════════════════════════════════════════════════════════════════════ */}
       <View style={styles.sectionDisplay}>
 
@@ -112,26 +128,10 @@ export const GameScreen: React.FC = () => {
 
         <View style={styles.internalDivider} />
 
-        {/* 2b — Scrollable hint cards */}
-        <Text style={styles.sectionLabel}>Hints — swipe to browse</Text>
+        {/* 2b — Hint list */}
+        <Text style={styles.sectionLabel}>Hints</Text>
         <HintList targetWords={stage.targetWords} solvedWordIds={solvedWordIds} />
 
-      </View>
-
-      {/* ══════════════════════════════════════════════════════════════════════
-          SECTION 1 — Syllable Pool  (bottom 55% of remaining space)
-      ══════════════════════════════════════════════════════════════════════ */}
-      <View style={styles.sectionSyllables}>
-        <Text style={styles.sectionLabel}>Syllable Pool</Text>
-        <ScrollView contentContainerStyle={styles.syllableGrid}>
-          {stage.syllablePool.map((syllable) => (
-            <SyllableButton
-              key={syllable}
-              syllable={syllable}
-              onPress={handleSyllablePress}
-            />
-          ))}
-        </ScrollView>
       </View>
 
     </SafeAreaView>
@@ -167,22 +167,22 @@ const styles = StyleSheet.create({
     color: '#718096',
   },
 
-  // ── Section 2: Display & Hints ───────────────────────
-  // flex: 45 means this takes 45 parts out of 45+55=100 → 45% of space
-  sectionDisplay: {
-    flex: 45,
-    borderBottomWidth: 3,
-    borderBottomColor: '#4A90E2',
-    paddingBottom: 4,
-    overflow: 'hidden',
-  },
-
   // ── Section 1: Syllable Pool ─────────────────────────
   // flex: 55 means this takes 55 parts out of 100 → 55% of space
   sectionSyllables: {
     flex: 55,
     backgroundColor: '#F7FAFC',
+    borderBottomWidth: 3,
+    borderBottomColor: '#4A90E2',
     paddingTop: 4,
+  },
+
+  // ── Section 2: Display & Hints ───────────────────────
+  // flex: 45 means this takes 45 parts out of 45+55=100 → 45% of space
+  sectionDisplay: {
+    flex: 45,
+    paddingBottom: 4,
+    overflow: 'hidden',
   },
 
   // ── Syllable grid (row-wrap inside ScrollView) ───────

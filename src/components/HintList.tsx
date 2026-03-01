@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, View, Text, StyleSheet } from 'react-native';
+import { ScrollView, View, Text, StyleSheet } from 'react-native';
 import { TargetWord } from '../types';
 
 interface Props {
@@ -7,106 +7,88 @@ interface Props {
   solvedWordIds: Set<string>;
 }
 
-interface CardProps {
+interface RowProps {
   item: TargetWord;
   index: number;
   isSolved: boolean;
 }
 
-const HintCard: React.FC<CardProps> = ({ item, index, isSolved }) => (
-  <View style={[styles.card, isSolved && styles.solvedCard]}>
-    <View style={styles.cardHeader}>
-      <Text style={styles.cardIndex}>{index + 1}.</Text>
-      {isSolved ? (
-        <Text style={styles.solvedWord}>{item.word}</Text>
-      ) : (
-        <Text style={styles.blanks}>
-          {item.syllables.map(() => '___').join(' · ')}
-        </Text>
-      )}
-    </View>
-    <Text style={[styles.definition, isSolved && styles.solvedDefinition]}>
-      {item.definition}
-    </Text>
+const HintRow: React.FC<RowProps> = ({ item, index, isSolved }) => (
+  <View style={[styles.row, isSolved && styles.solvedRow]}>
+    <Text style={styles.rowIndex}>{index + 1}.</Text>
+    {isSolved ? (
+      <Text style={styles.solvedWord}>{item.word}</Text>
+    ) : (
+      <Text style={styles.blanks}>
+        {item.syllables.map(() => '___').join(' · ')}
+      </Text>
+    )}
     {!isSolved && (
       <Text style={styles.syllableCount}>
-        {item.syllables.length} syllable{item.syllables.length !== 1 ? 's' : ''}
+        {item.syllables.length}syl
       </Text>
     )}
   </View>
 );
 
 export const HintList: React.FC<Props> = ({ targetWords, solvedWordIds }) => (
-  <FlatList
-    data={targetWords}
-    keyExtractor={(item) => item.id}
-    horizontal
-    showsHorizontalScrollIndicator={false}
+  <ScrollView
+    style={styles.scroll}
     contentContainerStyle={styles.list}
-    renderItem={({ item, index }) => (
-      <HintCard item={item} index={index} isSolved={solvedWordIds.has(item.id)} />
-    )}
-  />
+    showsVerticalScrollIndicator={false}
+  >
+    {targetWords.map((item, index) => (
+      <HintRow
+        key={item.id}
+        item={item}
+        index={index}
+        isSolved={solvedWordIds.has(item.id)}
+      />
+    ))}
+  </ScrollView>
 );
 
 const styles = StyleSheet.create({
+  scroll: {
+    flex: 1,
+  },
   list: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingHorizontal: 14,
+    paddingVertical: 4,
   },
-  card: {
-    width: 220,
-    backgroundColor: '#EBF4FF',
-    borderRadius: 12,
-    padding: 14,
-    marginRight: 10,
-    borderWidth: 1.5,
-    borderColor: '#BEE3F8',
-    justifyContent: 'space-between',
-  },
-  solvedCard: {
-    backgroundColor: '#C6F6D5',
-    borderColor: '#68D391',
-  },
-  cardHeader: {
+  row: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
-    gap: 6,
+    paddingVertical: 6,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E2E8F0',
+    gap: 8,
   },
-  cardIndex: {
-    color: '#718096',
+  solvedRow: {
+    borderBottomColor: '#9AE6B4',
+  },
+  rowIndex: {
+    width: 22,
+    color: '#A0AEC0',
     fontWeight: '700',
-    fontSize: 14,
+    fontSize: 13,
   },
   blanks: {
+    flex: 1,
     color: '#4A90E2',
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '700',
-    letterSpacing: 2,
-    flexShrink: 1,
+    letterSpacing: 1.5,
   },
   solvedWord: {
+    flex: 1,
     color: '#22543D',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '800',
-    textTransform: 'lowercase',
-  },
-  definition: {
-    color: '#4A5568',
-    fontSize: 13,
-    lineHeight: 19,
-    flexGrow: 1,
-  },
-  solvedDefinition: {
-    color: '#276749',
   },
   syllableCount: {
-    marginTop: 8,
-    color: '#90CDF4',
+    color: '#A0AEC0',
     fontSize: 11,
     fontWeight: '600',
-    textTransform: 'uppercase',
-    letterSpacing: 0.8,
   },
 });
