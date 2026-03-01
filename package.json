@@ -1,13 +1,13 @@
 {
   "name": "vocabulary-guess-game",
-  "version": "1.0.0",
+  "version": "0.6.0",
   "main": "node_modules/expo/AppEntry.js",
   "author": {
     "name": "armon roberts"
   },
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
+    "android": "expo start --android --clear",
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "eslint \"src/**/*.{ts,tsx}\" \"App.tsx\"",
@@ -39,7 +39,8 @@
     "preset": "jest-expo",
     "moduleNameMapper": {
       "@react-native-async-storage/async-storage": "@react-native-async-storage/async-storage/jest/async-storage-mock",
-      "react-native-safe-area-context": "<rootDir>/src/__mocks__/react-native-safe-area-context.js"
+      "react-native-safe-area-context": "<rootDir>/src/__mocks__/react-native-safe-area-context.js",
+      "^@expo/vector-icons$": "<rootDir>/src/__mocks__/expo-vector-icons.tsx"
     },
     "transformIgnorePatterns": [
       "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*)"

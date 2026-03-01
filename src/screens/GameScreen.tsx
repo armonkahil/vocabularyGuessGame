@@ -9,11 +9,13 @@ import {
   Alert,
   TouchableOpacity,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
-import { stage1 } from '../data/stages';
+import { ALL_STAGES } from '../data/stages';
 import { SyllableButton } from '../components/SyllableButton';
 import { WordBuilder } from '../components/WordBuilder';
 import { HintList } from '../components/HintList';
+import { SettingsModal } from '../components/SettingsModal';
 import { buildWordFromSyllables, validateWord, isStageComplete } from '../utils/gameLogic';
 import { useTheme } from '../theme/ThemeContext';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -21,7 +23,8 @@ import type { FeedbackState } from '../types';
 import type { Colors } from '../theme/colors';
 
 export const GameScreen: React.FC = () => {
-  const stage = stage1;
+  const [currentStageIndex, setCurrentStageIndex] = useState(0);
+  const stage = ALL_STAGES[currentStageIndex];
   const { mode, colors, toggle } = useTheme();
   const { bottom: bottomInset } = useSafeAreaInsets();
   // Mirror the bottom safe-area height so the banner balances it visually.
@@ -32,6 +35,7 @@ export const GameScreen: React.FC = () => {
   const [selectedSyllables, setSelectedSyllables] = useState<string[]>([]);
   const [solvedWordIds, setSolvedWordIds] = useState<Set<string>>(new Set());
   const [feedback, setFeedback] = useState<FeedbackState>(null);
+  const [settingsVisible, setSettingsVisible] = useState(false);
 
   // Clear feedback after a short animation window
   useEffect(() => {
@@ -45,6 +49,23 @@ export const GameScreen: React.FC = () => {
   const handleSyllablePress = useCallback((syllable: string) => {
     setSelectedSyllables((prev) => [...prev, syllable]);
     setFeedback(null);
+  }, []);
+
+  const handleNextStage = useCallback(() => {
+    setCurrentStageIndex((i) => i + 1);
+    setSolvedWordIds(new Set());
+    setSelectedSyllables([]);
+  }, []);
+
+  const handleRestartStage = useCallback(() => {
+    setSolvedWordIds(new Set());
+    setSelectedSyllables([]);
+  }, []);
+
+  const handleResetProgress = useCallback(() => {
+    setCurrentStageIndex(0);
+    setSolvedWordIds(new Set());
+    setSelectedSyllables([]);
   }, []);
 
   const handleClear = useCallback(() => {
@@ -63,15 +84,25 @@ export const GameScreen: React.FC = () => {
       setSelectedSyllables([]);
 
       if (isStageComplete(stage, nextSolved)) {
-        void setTimeout(
-          () => Alert.alert('Stage Complete! 🎉', 'You found all the words!'),
-          800,
-        );
+        setTimeout(() => {
+          const isLastStage = currentStageIndex >= ALL_STAGES.length - 1;
+          Alert.alert(
+            'Stage Complete! 🎉',
+            isLastStage ? 'You completed all stages!' : 'Ready for the next stage?',
+            isLastStage
+              ? [{ text: 'Finish' }]
+              : [{ text: 'Next Stage', onPress: handleNextStage }],
+          );
+        }, 800);
       }
     } else {
       setFeedback('incorrect');
+      setSelectedSyllables([]);
     }
-  }, [selectedSyllables, solvedWordIds, stage]);
+  }, [currentStageIndex, handleNextStage, selectedSyllables, solvedWordIds, stage]);
+
+  const handleOpenSettings = useCallback(() => setSettingsVisible(true), []);
+  const handleCloseSettings = useCallback(() => setSettingsVisible(false), []);
 
   // ── Derived values ───────────────────────────────────────────────────────────
   const solvedCount = solvedWordIds.size;
@@ -102,10 +133,12 @@ export const GameScreen: React.FC = () => {
           <Text style={styles.progress}>
             {solvedCount} / {totalCount} found
           </Text>
-          <TouchableOpacity onPress={toggle} style={styles.themeBtn}>
-            <Text style={styles.themeBtnLabel}>
-              {mode === 'light' ? 'Dark' : 'Light'}
-            </Text>
+          <TouchableOpacity
+            onPress={handleOpenSettings}
+            style={styles.settingsBtn}
+            testID="settings-btn"
+          >
+            <Ionicons name="settings-outline" size={20} color={colors.textSecondary} />
           </TouchableOpacity>
         </View>
       </View>
@@ -148,6 +181,16 @@ export const GameScreen: React.FC = () => {
         <HintList targetWords={stage.targetWords} solvedWordIds={solvedWordIds} colors={colors} />
 
       </View>
+
+      <SettingsModal
+        visible={settingsVisible}
+        onClose={handleCloseSettings}
+        mode={mode}
+        onToggleTheme={toggle}
+        onRestartStage={handleRestartStage}
+        onResetProgress={handleResetProgress}
+        colors={colors}
+      />
 
     </SafeAreaView>
   );
@@ -222,17 +265,11 @@ const makeStyles = (c: Colors) =>
       fontWeight: '600',
       color: c.textMuted,
     },
-    themeBtn: {
-      paddingHorizontal: 10,
-      paddingVertical: 4,
+    settingsBtn: {
+      padding: 6,
       borderRadius: 6,
       borderWidth: 1,
       borderColor: c.border,
-    },
-    themeBtnLabel: {
-      fontSize: 13,
-      fontWeight: '600',
-      color: c.textSecondary,
     },
 
     // ── Section 1: Syllable Pool ─────────────────────────
@@ -278,5 +315,6 @@ const makeStyles = (c: Colors) =>
       paddingHorizontal: 16,
       paddingTop: 4,
       paddingBottom: 2,
+      textAlign: 'center',
     },
   });
