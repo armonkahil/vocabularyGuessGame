@@ -1,5 +1,4 @@
 import { ALL_STAGES } from '../stages';
-import type { Stage } from '../../types';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 

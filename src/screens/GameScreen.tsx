@@ -18,6 +18,7 @@ import { buildWordFromSyllables, validateWord, isStageComplete } from '../utils/
 import { useTheme } from '../theme/ThemeContext';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { FeedbackState } from '../types';
+import type { Colors } from '../theme/colors';
 
 export const GameScreen: React.FC = () => {
   const stage = stage1;
@@ -153,7 +154,6 @@ export const GameScreen: React.FC = () => {
 };
 
 // ── Styles (theme-aware) ───────────────────────────────────────────────────────
-import type { Colors } from '../theme/colors';
 
 const makeStyles = (c: Colors) =>
   StyleSheet.create({
